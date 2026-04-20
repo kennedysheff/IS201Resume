@@ -1,0 +1,33 @@
+.header{
+    background-color:cadetblue;
+    color:black;
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+}
+.utah{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color:darkslategrey;
+    text-align:left;
+    list-style-position:inside;
+}
+.california{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color:darkslategrey;
+    text-align:left;
+    list-style-position:inside;
+}
+body{
+    background-color: aquamarine;
+}
+.mainlink{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    text-align: center;
+}
+.container {
+    border: 3px solid darkslategrey;
+    padding: 20px;
+    margin: 20px auto;
+    width: 90%;
+    background-color:aquamarine;
+}

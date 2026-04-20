@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>What Season Are You?</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif;
+            background: linear-gradient(135deg, #ffecd2, #fcb69f);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+
+        .quiz-container {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        .question {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+        }
+
+        .answers {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        button {
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1em;
+            cursor: pointer;
+            background-color: #ff9a9e;
+            color: #333;
+            transition: transform 0.15s, background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #fad0c4;
+            transform: scale(1.05);
+        }
+
+        .progress {
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .result {
+            font-size: 1.4em;
+            margin-top: 20px;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h1>🌸 What Season Are You? 🌞</h1>
+    <div class="progress" id="progress"></div>
+    <div class="question" id="question"></div>
+    <div class="answers" id="answers"></div>
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    const questions = [
+        {
+            text: "Pick a perfect weekend activity:",
+            answers: [
+                { text: "Picnic with friends", season: "Spring" },
+                { text: "Beach day", season: "Summer" },
+                { text: "Cozy movie marathon", season: "Fall" },
+                { text: "Snowy walk + hot chocolate", season: "Winter" }
+            ]
+        },
+        {
+            text: "Your personality is best described as:",
+            answers: [
+                { text: "Optimistic & fresh", season: "Spring" },
+                { text: "Energetic & bold", season: "Summer" },
+                { text: "Thoughtful & calm", season: "Fall" },
+                { text: "Quiet & introspective", season: "Winter" }
+            ]
+        },
+        {
+            text: "Favorite color palette?",
+            answers: [
+                { text: "Pastels", season: "Spring" },
+                { text: "Brights", season: "Summer" },
+                { text: "Earth tones", season: "Fall" },
+                { text: "Neutrals", season: "Winter" }
+            ]
+        },
+        {
+            text: "Choose a vibe:",
+            answers: [
+                { text: "New beginnings", season: "Spring" },
+                { text: "Adventure", season: "Summer" },
+                { text: "Comfort", season: "Fall" },
+                { text: "Peace & quiet", season: "Winter" }
+            ]
+        },
+        {
+            text: "Your energy level is usually:",
+            answers: [
+                { text: "Gently excited", season: "Spring" },
+                { text: "Very high", season: "Summer" },
+                { text: "Balanced", season: "Fall" },
+                { text: "Low but steady", season: "Winter" }
+            ]
+        },
+        {
+            text: "Pick a drink:",
+            answers: [
+                { text: "Flavored iced tea", season: "Spring" },
+                { text: "Lemonade", season: "Summer" },
+                { text: "Chai latte", season: "Fall" },
+                { text: "Hot cocoa", season: "Winter" }
+            ]
+        },
+        {
+            text: "Your friends describe you as:",
+            answers: [
+                { text: "Supportive", season: "Spring" },
+                { text: "Fun", season: "Summer" },
+                { text: "Reliable", season: "Fall" },
+                { text: "Wise", season: "Winter" }
+            ]
+        },
+        {
+            text: "Favorite kind of weather:",
+            answers: [
+                { text: "Mild and breezy", season: "Spring" },
+                { text: "Hot and sunny", season: "Summer" },
+                { text: "Crisp and cool", season: "Fall" },
+                { text: "Cold and snowy", season: "Winter" }
+            ]
+        },
+        {
+            text: "How do you recharge?",
+            answers: [
+                { text: "Trying something new", season: "Spring" },
+                { text: "Socializing", season: "Summer" },
+                { text: "Relaxing routines", season: "Fall" },
+                { text: "Being alone", season: "Winter" }
+            ]
+        },
+        {
+            text: "Pick a word that fits you:",
+            answers: [
+                { text: "Growth", season: "Spring" },
+                { text: "Joy", season: "Summer" },
+                { text: "Warmth", season: "Fall" },
+                { text: "Depth", season: "Winter" }
+            ]
+        }
+    ];
+
+    const scores = {
+        Spring: 0,
+        Summer: 0,
+        Fall: 0,
+        Winter: 0
+    };
+
+    let currentQuestion = 0;
+
+    function showQuestion() {
+        document.getElementById("progress").textContent =
+            `Question ${currentQuestion + 1} of ${questions.length}`;
+
+        const q = questions[currentQuestion];
+        document.getElementById("question").textContent = q.text;
+
+        const answersDiv = document.getElementById("answers");
+        answersDiv.innerHTML = "";
+
+        q.answers.forEach(answer => {
+            const btn = document.createElement("button");
+            btn.textContent = answer.text;
+            btn.onclick = () => answerQuestion(answer.season);
+            answersDiv.appendChild(btn);
+        });
+    }
+
+    function answerQuestion(season) {
+        scores[season]++;
+        currentQuestion++;
+
+        if (currentQuestion < questions.length) {
+            showQuestion();
+        } else {
+            showResult();
+        }
+    }
+
+    function showResult() {
+        document.getElementById("question").textContent = "";
+        document.getElementById("answers").innerHTML = "";
+        document.getElementById("progress").textContent = "";
+
+        const maxScore = Math.max(...Object.values(scores));
+        const topSeasons = Object.keys(scores).filter(
+            season => scores[season] === maxScore
+        );
+
+        const resultDiv = document.getElementById("result");
+
+        if (topSeasons.length === 1) {
+            const season = topSeasons[0];
+            const descriptions = {
+                Spring: "You’re fresh, optimistic, and full of growth energy 🌷 You love new beginnings and bring positivity wherever you go.",
+                Summer: "You’re bright, social, and joyful ☀️ You thrive in the spotlight and bring the fun to any situation.",
+                Fall: "You’re grounded, cozy, and dependable 🍂 People feel safe and relaxed around you.",
+                Winter: "You’re thoughtful, calm, and introspective ❄️ You have emotional depth and a quiet strength."
+            };
+
+            resultDiv.innerHTML = `✨ You are <strong>${season}</strong>! ✨<br><br>${descriptions[season]}`;
+        } else {
+            resultDiv.innerHTML = `🌈 You are a mix of <strong>${topSeasons.join(" & ")}</strong>! 🌈<br><br>
+            This means you blend traits from multiple seasons — adaptable, multi‑dimensional, and uniquely you.`;
+        }
+    }
+
+    showQuestion();
+</script>
+
+</body>
+</html>
